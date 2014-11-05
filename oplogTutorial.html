@@ -3,12 +3,37 @@
 </head>
 
 <body>
-  <h1>Welcome to Meteor!</h1>
-
-  {{> hello}}
+  <div>
+    {{> players}}
+  </div>
+  <div>
+    {{> form}}
+  </div>
+  <div>
+    {{> serverFacts}}
+  </div>
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+<template name="players">
+  <h1>List of players</h1>
+  <ul>
+    {{#each scors}}
+    <li>
+      <div>
+        Name: {{ this.name }}
+      </div>
+      <div>
+        Score: {{ this.score }}
+      </div>
+    </li>
+    {{/each}}
+  </ul>
+</template>
+
+<template name="form">
+  <form id="myform">
+    Name: <input type="text" name="name"/>
+    Score: <input type="number" name="score"/>
+    <input type="submit" id="submit"/>
+  </form>
 </template>

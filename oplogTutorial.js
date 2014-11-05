@@ -1,23 +1,35 @@
-if (Meteor.isClient) {
-  // counter starts at 0
-  Session.setDefault("counter", 0);
-
-  Template.hello.helpers({
-    counter: function () {
-      return Session.get("counter");
-    }
+if (Meteor.isServer) {
+  Meteor.publish("playerData", function() {
+    return Players.find();
   });
 
-  Template.hello.events({
-    'click button': function () {
-      // increment the counter when button is clicked
-      Session.set("counter", Session.get("counter") + 1);
-    }
+  // Set which users can see server metrics
+  Facts.setUserIdFilter(function () {
+    return true;
   });
 }
 
-if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
+if (Meteor.isClient) {
+  Meteor.subscribe("playerData");
+
+  // Pass query results to the "players" template
+  Template.players.scorers = function () {
+    return Players.find();
+  };
+
+  // Grab user input fields
+  Template.form.events({
+    'submit form' : function (event, template) {
+      var name = template.find("input[name=name]").value;
+      var score = template.find("input[name=score]").value;
+    
+      // Do inputs validation
+
+      // Insert into database
+      var data = { name: name, score: score };
+      Players.insert(data, function(err) {
+        if(err) throw err;
+      });
+    }
   });
 }
